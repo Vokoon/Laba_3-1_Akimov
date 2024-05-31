@@ -93,7 +93,7 @@ history = model.fit(train_input, train_output, epochs=3, batch_size=64,
 
 import matplotlib.pyplot as plt
 ```
-
+Финальный штрих, создание самой "композиции".
 ```Rudy
 
 import numpy as np
