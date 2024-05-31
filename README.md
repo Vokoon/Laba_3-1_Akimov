@@ -92,20 +92,4 @@ history = model.fit(train_input, train_output, epochs=3, batch_size=64,
                     callbacks=callbacks_list, verbose=1)
 
 import matplotlib.pyplot as plt
-
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('Потери модели')
-plt.ylabel('Потери')
-plt.xlabel('Эпоха')
-plt.legend(['Обучение', 'Валидация'], loc='upper left')
-plt.show()
-
-plt.plot(history.history['accuracy'])
-plt.plot(history.history['val_accuracy'])
-plt.title('Точность модели')
-plt.ylabel('Точность')
-plt.xlabel('Эпоха')
-plt.legend(['Обучение', 'Валидация'], loc='upper left')
-plt.show()
 ```
