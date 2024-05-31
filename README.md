@@ -17,4 +17,18 @@
 !pip install tensorflow
 ```
 ![image](https://github.com/Vokoon/Laba_3-1_Akimov/assets/120046709/d074ea73-a3ab-479c-9c73-1d16ac646c19)
+```Ruby
 
+import os
+import pretty_midi
+
+midi_folder_path = '/content/midi'
+
+midi_data = []
+for file in os.listdir(midi_folder_path):
+    if file.endswith('.mid'):
+        midi_path = os.path.join(midi_folder_path, file)
+        midi = pretty_midi.PrettyMIDI(midi_path)
+        # Здесь вы можете добавить код для извлечения нужных вам данных из midi
+        midi_data.append(midi)
+```
