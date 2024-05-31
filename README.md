@@ -64,7 +64,8 @@ try:
 except Exception as e:
     print(f"Произошла ошибка при конвертации: {e}")
 ```
-Создаём модель RNN(LSTM)
+Создаём модель RNN(LSTM), Обучаем модель RNN(LSTM)
+Процесс может быть очень долгим
 ```Rudy
 from keras.callbacks import ModelCheckpoint
 
