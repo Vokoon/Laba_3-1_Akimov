@@ -19,6 +19,7 @@
 ![image](https://github.com/Vokoon/Laba_3-1_Akimov/assets/120046709/d074ea73-a3ab-479c-9c73-1d16ac646c19)
 
 Теперь вы можете загрузить и обработать MIDI-файлы:
+Создаём модель RNN(LSTM)
 ```Ruby
 import os
 import pretty_midi
@@ -64,7 +65,7 @@ try:
 except Exception as e:
     print(f"Произошла ошибка при конвертации: {e}")
 ```
-Создаём модель RNN(LSTM), Обучаем модель RNN(LSTM)
+Обучаем модель RNN(LSTM)
 Процесс может быть очень долгим
 ```Rudy
 from keras.callbacks import ModelCheckpoint
