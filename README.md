@@ -49,3 +49,8 @@ def convert_midi_files_in_directory(directory):
 directory = '/content/midi/midi'
 all_notes = convert_midi_files_in_directory(directory)
 ```
+Чтобы преобразовать последовательность нот, представленных в виде строк, в числовой формат, можно использовать словарь для отображения каждой уникальной ноты или аккорда в уникальное числовое значение:
+```Rudy
+note_to_int = {note: number for number, note in enumerate(sorted(set(all_notes)))}
+numeric_notes = [note_to_int[note] for note in all_notes]
+```
