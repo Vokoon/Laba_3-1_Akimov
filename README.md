@@ -1,4 +1,5 @@
 # Laba_3-1_Akimov
+Работа проводилась в google colab
 Для начала клонируйте репозиторий гитхаб'а:
 ```Ruby
 !git clone https://github.com/Vokoon/Laba_3-1_Akimov.git
@@ -10,6 +11,9 @@
 ```Ruby
 !pip install pretty_midi
 ```
+![image](https://github.com/Vokoon/Laba_3-1_Akimov/assets/120046709/ec1d1c8a-4e58-436d-9f96-a10a06a80120)
+
+Должно вывести следующее
 ```Ruby
 !pip install tensorflow
 ```
