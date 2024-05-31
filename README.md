@@ -13,7 +13,8 @@
 ```
 ![image](https://github.com/Vokoon/Laba_3-1_Akimov/assets/120046709/ec1d1c8a-4e58-436d-9f96-a10a06a80120)
 
-Должно вывести следующее
 ```Ruby
 !pip install tensorflow
 ```
+![image](https://github.com/Vokoon/Laba_3-1_Akimov/assets/120046709/d074ea73-a3ab-479c-9c73-1d16ac646c19)
+
