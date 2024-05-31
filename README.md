@@ -31,6 +31,5 @@ for file in os.listdir(midi_folder_path):
     if file.endswith('.mid'):
         midi_path = os.path.join(midi_folder_path, file)
         midi = pretty_midi.PrettyMIDI(midi_path)
-        # Здесь вы можете добавить код для извлечения нужных вам данных из midi
         midi_data.append(midi)
 ```
