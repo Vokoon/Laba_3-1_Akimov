@@ -64,6 +64,48 @@ try:
 except Exception as e:
     print(f"Произошла ошибка при конвертации: {e}")
 ```
+Создаём модель RNN(LSTM)
 ```Rudy
+from keras.callbacks import ModelCheckpoint
 
+# Разделение данных на обучающую и валидационную выборки
+split = int(n_patterns * 0.9)  # 90% для обучения, 10% для валидации
+train_input = network_input[:split]
+train_output = network_output[:split]
+validation_input = network_input[split:]
+validation_output = network_output[split:]
+
+# Создание чекпоинта для сохранения лучшей модели
+filepath = "weights-improvement-{epoch:02d}-{loss:.4f}-bigger.hdf5"
+checkpoint = ModelCheckpoint(
+    filepath, monitor='loss', verbose=1, save_best_only=True, mode='min'
+)
+
+callbacks_list = [checkpoint]
+
+# Обучение модели
+history = model.fit(train_input, train_output, epochs=10, batch_size=64,
+                    validation_data=(validation_input, validation_output),
+                    callbacks=callbacks_list, verbose=1)
+
+# Вывод истории обучения
+import matplotlib.pyplot as plt
+
+# График потерь на обучающей и валидационной выборке
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Потери модели')
+plt.ylabel('Потери')
+plt.xlabel('Эпоха')
+plt.legend(['Обучение', 'Валидация'], loc='upper left')
+plt.show()
+
+# График точности на обучающей и валидационной выборке
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('Точность модели')
+plt.ylabel('Точность')
+plt.xlabel('Эпоха')
+plt.legend(['Обучение', 'Валидация'], loc='upper left')
+plt.show()
 ```
