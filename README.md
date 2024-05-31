@@ -67,7 +67,7 @@ except Exception as e:
 Обучаем модель RNN(LSTM)
 Процесс может быть очень долгим, кол-во "эпох" меняйте по своему желанию, насколько качественный продукт вы хотите получить, я ограничусь 2.
 
-
+```Rudy
 from keras.callbacks import ModelCheckpoint
 
 split = int(n_patterns * 0.9)  # 90% для обучения, 10% для валидации
@@ -104,4 +104,4 @@ plt.ylabel('Точность')
 plt.xlabel('Эпоха')
 plt.legend(['Обучение', 'Валидация'], loc='upper left')
 plt.show()
-
+```
