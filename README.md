@@ -65,7 +65,8 @@ except Exception as e:
     print(f"Произошла ошибка при конвертации: {e}")
 ```
 Обучаем модель RNN(LSTM)
-Процесс может быть очень долгим, кол-во "эпох" меняйте по своему желанию, насколько качественный продукт вы хотите получить, я ограничусь 2.
+Процесс может быть очень долгим, кол-во "эпох" меняйте по своему желанию, насколько качественный продукт вы хотите получить, я ограничусь 3.
+В конце компиляции может выйти ошибка, перезапускать код нет необходимости, можем продолжать работу.
 
 ```Rudy
 from keras.callbacks import ModelCheckpoint
@@ -83,7 +84,7 @@ checkpoint = ModelCheckpoint(
 
 callbacks_list = [checkpoint]
 
-history = model.fit(train_input, train_output, epochs=2, batch_size=64,
+history = model.fit(train_input, train_output, epochs=3, batch_size=64,
                     validation_data=(validation_input, validation_output),
                     callbacks=callbacks_list, verbose=1)
 
