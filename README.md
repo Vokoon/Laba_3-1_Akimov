@@ -93,3 +93,73 @@ history = model.fit(train_input, train_output, epochs=3, batch_size=64,
 
 import matplotlib.pyplot as plt
 ```
+
+```Rudy
+
+import numpy as np
+from music21 import stream, note, chord, instrument
+
+def sample_with_temperature(predictions, temperature=1.0):
+    predictions = np.asarray(predictions).astype('float64')
+    predictions = np.log(predictions + 1e-7) / temperature
+    exp_preds = np.exp(predictions)
+    predictions = exp_preds / np.sum(exp_preds)
+    probabilities = np.random.multinomial(1, predictions, 1)
+    return np.argmax(probabilities)
+
+def generate_music(model, network_input, n_vocab, int_to_note, num_notes=500):
+    start = np.random.randint(0, len(network_input)-1)
+    pattern = network_input[start]
+    prediction_output = []
+
+    for note_index in range(num_notes):
+        prediction_input = np.reshape(pattern, (1, len(pattern), 1))
+        prediction_input = prediction_input / float(n_vocab)
+
+        prediction = model.predict(prediction_input, verbose=0)
+
+        index = sample_with_temperature(prediction[0], temperature=0.5)
+        result = int_to_note[index]
+        prediction_output.append(result)
+
+        pattern = np.append(pattern, index)
+        pattern = pattern[1:len(pattern)]
+
+    return prediction_output
+
+def create_midi(prediction_output, filename='test_output.mid'):
+    offset = 0
+    output_notes = []
+
+    for pattern in prediction_output:
+        if ('.' in pattern) or pattern.isdigit():
+            notes_in_chord = pattern.split('.')
+            notes = []
+            for current_note in notes_in_chord:
+                new_note = note.Note(int(current_note))
+                new_note.storedInstrument = instrument.Piano()
+                notes.append(new_note)
+            new_chord = chord.Chord(notes)
+            new_chord.offset = offset
+            output_notes.append(new_chord)
+        else:
+            new_note = note.Note(pattern)
+            new_note.offset = offset
+            new_note.storedInstrument = instrument.Piano()
+            output_notes.append(new_note)
+
+        # Увеличение смещения каждой ноты
+        offset += 0.5
+
+    # Создание потока с нотами
+    midi_stream = stream.Stream(output_notes)
+
+    # Сохранение в MIDI файл
+    midi_stream.write('midi', fp=filename)
+
+# Генерация музыки
+prediction_output = generate_music(model, network_input, n_vocab, int_to_note)
+
+# Создание MIDI файла
+create_midi(prediction_output)
+```
