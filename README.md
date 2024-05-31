@@ -25,7 +25,6 @@ import os
 import pretty_midi
 from music21 import converter, note, chord, instrument
 
-# Функция для чтения всех MIDI файлов в указанной директории
 def convert_midi_files_in_directory(directory):
     notes = []
     for file in os.listdir(directory):
@@ -35,13 +34,13 @@ def convert_midi_files_in_directory(directory):
                 midi = converter.parse(midi_path)
                 notes_to_parse = None
 
-                try:  # файл содержит инструментальные дорожки
+                try: 
                     s2 = instrument.partitionByInstrument(midi)
-                    if s2:  # проверка на наличие инструментальных дорожек
+                    if s2:  
                         notes_to_parse = s2.parts[0].recurse() 
                     else:
                         notes_to_parse = midi.flat.notes
-                except Exception as e:  # файл содержит ноты в одной дорожке
+                except Exception as e:  
                     print(f"Ошибка при разборе дорожек: {e}")
                     notes_to_parse = midi.flat.notes
 
@@ -55,7 +54,6 @@ def convert_midi_files_in_directory(directory):
                 print(f"Не удалось обработать файл {file}: {e}")
     return notes
 
-# Пример использования функции
 directory = '/content/Laba_3-1_Akimov/midi'
 try:
     all_notes = convert_midi_files_in_directory(directory)
@@ -67,17 +65,16 @@ except Exception as e:
 ```
 Обучаем модель RNN(LSTM)
 Процесс может быть очень долгим
+
 ```Rudy
 from keras.callbacks import ModelCheckpoint
 
-# Разделение данных на обучающую и валидационную выборки
 split = int(n_patterns * 0.9)  # 90% для обучения, 10% для валидации
 train_input = network_input[:split]
 train_output = network_output[:split]
 validation_input = network_input[split:]
 validation_output = network_output[split:]
 
-# Создание чекпоинта для сохранения лучшей модели
 filepath = "weights-improvement-{epoch:02d}-{loss:.4f}-bigger.hdf5"
 checkpoint = ModelCheckpoint(
     filepath, monitor='loss', verbose=1, save_best_only=True, mode='min'
@@ -85,15 +82,12 @@ checkpoint = ModelCheckpoint(
 
 callbacks_list = [checkpoint]
 
-# Обучение модели
 history = model.fit(train_input, train_output, epochs=10, batch_size=64,
                     validation_data=(validation_input, validation_output),
                     callbacks=callbacks_list, verbose=1)
 
-# Вывод истории обучения
 import matplotlib.pyplot as plt
 
-# График потерь на обучающей и валидационной выборке
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 plt.title('Потери модели')
@@ -102,7 +96,6 @@ plt.xlabel('Эпоха')
 plt.legend(['Обучение', 'Валидация'], loc='upper left')
 plt.show()
 
-# График точности на обучающей и валидационной выборке
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['val_accuracy'])
 plt.title('Точность модели')
