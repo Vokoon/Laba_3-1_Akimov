@@ -64,8 +64,6 @@ try:
 except Exception as e:
     print(f"Произошла ошибка при конвертации: {e}")
 ```
-Чтобы преобразовать последовательность нот, представленных в виде строк, в числовой формат, можно использовать словарь для отображения каждой уникальной ноты или аккорда в уникальное числовое значение:
 ```Rudy
-note_to_int = {note: number for number, note in enumerate(sorted(set(all_notes)))}
-numeric_notes = [note_to_int[note] for note in all_notes]
+
 ```
