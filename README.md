@@ -58,6 +58,7 @@ directory = '/content/Laba_3-1_Akimov/midi'
 try:
     all_notes = convert_midi_files_in_directory(directory)
     note_to_int = {note: number for number, note in enumerate(sorted(set(all_notes)))}
+    int_to_note = {number: note for note, number in note_to_int.items()}
     numeric_notes = [note_to_int[note] for note in all_notes]
     print("Конвертация завершена успешно.")
 except Exception as e:
