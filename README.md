@@ -94,11 +94,12 @@ history = model.fit(train_input, train_output, epochs=3, batch_size=64,
 
 import matplotlib.pyplot as plt
 ```
-Финальный штрих, создание самой "композиции".
+Финальный штрих, создание самой "композиции". Одну из модель полученную выше, используете тут.
 ```Rudy
-
 import numpy as np
 from music21 import stream, note, chord, instrument
+from keras.models import load_model
+model = load_model('***')
 
 def sample_with_temperature(predictions, temperature=1.0):
     predictions = np.asarray(predictions).astype('float64')
@@ -107,6 +108,7 @@ def sample_with_temperature(predictions, temperature=1.0):
     predictions = exp_preds / np.sum(exp_preds)
     probabilities = np.random.multinomial(1, predictions, 1)
     return np.argmax(probabilities)
+np.random.seed(None)
 
 def generate_music(model, network_input, n_vocab, int_to_note, num_notes=500):
     start = np.random.randint(0, len(network_input)-1)
@@ -119,7 +121,8 @@ def generate_music(model, network_input, n_vocab, int_to_note, num_notes=500):
 
         prediction = model.predict(prediction_input, verbose=0)
 
-        index = sample_with_temperature(prediction[0], temperature=0.5)
+        # Использование функции sample_with_temperature для выбора следующей ноты
+        index = sample_with_temperature(prediction[0], temperature=0.1)
         result = int_to_note[index]
         prediction_output.append(result)
 
@@ -128,11 +131,14 @@ def generate_music(model, network_input, n_vocab, int_to_note, num_notes=500):
 
     return prediction_output
 
+# Функция для создания MIDI файла из последовательности нот
 def create_midi(prediction_output, filename='test_output.mid'):
     offset = 0
     output_notes = []
 
+    # Создание нот и добавление их в список
     for pattern in prediction_output:
+        # Если паттерн - это аккорд
         if ('.' in pattern) or pattern.isdigit():
             notes_in_chord = pattern.split('.')
             notes = []
@@ -143,6 +149,7 @@ def create_midi(prediction_output, filename='test_output.mid'):
             new_chord = chord.Chord(notes)
             new_chord.offset = offset
             output_notes.append(new_chord)
+        # Если паттерн - это нота
         else:
             new_note = note.Note(pattern)
             new_note.offset = offset
@@ -150,7 +157,7 @@ def create_midi(prediction_output, filename='test_output.mid'):
             output_notes.append(new_note)
 
         # Увеличение смещения каждой ноты
-        offset += 0.5
+        offset += np.random.uniform(0.5, 0.75)
 
     # Создание потока с нотами
     midi_stream = stream.Stream(output_notes)
@@ -158,9 +165,7 @@ def create_midi(prediction_output, filename='test_output.mid'):
     # Сохранение в MIDI файл
     midi_stream.write('midi', fp=filename)
 
-# Генерация музыки
+# Генерация музыки и Создание MIDI файла
 prediction_output = generate_music(model, network_input, n_vocab, int_to_note)
-
-# Создание MIDI файла
 create_midi(prediction_output)
 ```
