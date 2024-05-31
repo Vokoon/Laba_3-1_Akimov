@@ -22,7 +22,7 @@
 ```Ruby
 import os
 import pretty_midi
-from music21 import converter, note, chord
+from music21 import converter, note, chord, instrument
 
 # Функция для чтения всех MIDI файлов в указанной директории
 def convert_midi_files_in_directory(directory):
@@ -30,24 +30,39 @@ def convert_midi_files_in_directory(directory):
     for file in os.listdir(directory):
         if file.endswith(".mid"):
             midi_path = os.path.join(directory, file)
-            midi = converter.parse(midi_path)
-            notes_to_parse = None
+            try:
+                midi = converter.parse(midi_path)
+                notes_to_parse = None
 
-            try:  # файл содержит инструментальные дорожки
-                s2 = instrument.partitionByInstrument(midi)
-                notes_to_parse = s2.parts[0].recurse() 
-            except:  # файл содержит ноты в одной дорожке
-                notes_to_parse = midi.flat.notes
+                try:  # файл содержит инструментальные дорожки
+                    s2 = instrument.partitionByInstrument(midi)
+                    if s2:  # проверка на наличие инструментальных дорожек
+                        notes_to_parse = s2.parts[0].recurse() 
+                    else:
+                        notes_to_parse = midi.flat.notes
+                except Exception as e:  # файл содержит ноты в одной дорожке
+                    print(f"Ошибка при разборе дорожек: {e}")
+                    notes_to_parse = midi.flat.notes
 
-            for element in notes_to_parse:
-                if isinstance(element, note.Note):
-                    notes.append(str(element.pitch))
-                elif isinstance(element, chord.Chord):
-                    notes.append('.'.join(str(n) for n in element.normalOrder))
+                for element in notes_to_parse:
+                    if isinstance(element, note.Note):
+                        notes.append(str(element.pitch))
+                    elif isinstance(element, chord.Chord):
+                        notes.append('.'.join(str(n) for n in element.normalOrder))
+                print(f"Файл {file} успешно обработан.")
+            except Exception as e:
+                print(f"Не удалось обработать файл {file}: {e}")
     return notes
 
-directory = '/content/midi/midi'
-all_notes = convert_midi_files_in_directory(directory)
+# Пример использования функции
+directory = '/content/Laba_3-1_Akimov/midi'
+try:
+    all_notes = convert_midi_files_in_directory(directory)
+    note_to_int = {note: number for number, note in enumerate(sorted(set(all_notes)))}
+    numeric_notes = [note_to_int[note] for note in all_notes]
+    print("Конвертация завершена успешно.")
+except Exception as e:
+    print(f"Произошла ошибка при конвертации: {e}")
 ```
 Чтобы преобразовать последовательность нот, представленных в виде строк, в числовой формат, можно использовать словарь для отображения каждой уникальной ноты или аккорда в уникальное числовое значение:
 ```Rudy
