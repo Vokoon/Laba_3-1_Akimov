@@ -46,9 +46,6 @@ def convert_midi_files_in_directory(directory):
                     notes.append('.'.join(str(n) for n in element.normalOrder))
     return notes
 
-# Пример использования функции
 directory = '/content/midi/midi'
 all_notes = convert_midi_files_in_directory(directory)
-
-# Теперь all_notes содержит последовательности нот и аккордов из всех MIDI файлов в директории
 ```
