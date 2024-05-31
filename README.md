@@ -20,16 +20,35 @@
 
 Теперь вы можете загрузить и обработать MIDI-файлы:
 ```Ruby
-
 import os
 import pretty_midi
+from music21 import converter, note, chord
 
-midi_folder_path = '/content/midi'
+# Функция для чтения всех MIDI файлов в указанной директории
+def convert_midi_files_in_directory(directory):
+    notes = []
+    for file in os.listdir(directory):
+        if file.endswith(".mid"):
+            midi_path = os.path.join(directory, file)
+            midi = converter.parse(midi_path)
+            notes_to_parse = None
 
-midi_data = []
-for file in os.listdir(midi_folder_path):
-    if file.endswith('.mid'):
-        midi_path = os.path.join(midi_folder_path, file)
-        midi = pretty_midi.PrettyMIDI(midi_path)
-        midi_data.append(midi)
+            try:  # файл содержит инструментальные дорожки
+                s2 = instrument.partitionByInstrument(midi)
+                notes_to_parse = s2.parts[0].recurse() 
+            except:  # файл содержит ноты в одной дорожке
+                notes_to_parse = midi.flat.notes
+
+            for element in notes_to_parse:
+                if isinstance(element, note.Note):
+                    notes.append(str(element.pitch))
+                elif isinstance(element, chord.Chord):
+                    notes.append('.'.join(str(n) for n in element.normalOrder))
+    return notes
+
+# Пример использования функции
+directory = '/content/midi/midi'
+all_notes = convert_midi_files_in_directory(directory)
+
+# Теперь all_notes содержит последовательности нот и аккордов из всех MIDI файлов в директории
 ```
